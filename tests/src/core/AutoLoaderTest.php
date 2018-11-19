@@ -16,18 +16,26 @@ class AutoLoaderTest extends TestCase
         $this->service = new AutoLoader();
     }
 
+    /**
+     * Test loading class
+     * @depends testRegisterNamespace
+     */
     public function testLoadPSR4()
     {
-        $class = $this->service->loadPSR4(
+        $result = $this->service->loadPSR4(
             AutoLoader::class
         );
 
-        $this->assertAttributeInstanceOf(
-            AutoLoader::class,
-            $class
+        $this->assertEquals(
+            true,
+            $result
         );
     }
 
+    /**
+     * Test throwing exception
+     * @depends testRegisterNamespace
+     */
     public function testAutoLoaderException()
     {
         $this->expectException(
@@ -39,6 +47,9 @@ class AutoLoaderTest extends TestCase
         );
     }
 
+    /**
+     * Test registering namespace
+     */
     public function testRegisterNamespace()
     {
         $result = $this->service->registerNamespace(
