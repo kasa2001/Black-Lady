@@ -2,10 +2,9 @@
 
 namespace Tests\Core;
 
-use PHPUnit\Framework\TestCase;
-
 use Application\Core\AutoLoader;
 use Application\Core\Exception\AutoLoaderException;
+use PHPUnit\Framework\TestCase;
 
 class AutoLoaderTest extends TestCase
 {
@@ -14,6 +13,22 @@ class AutoLoaderTest extends TestCase
     protected function setUp()
     {
         $this->service = new AutoLoader();
+    }
+
+    /**
+     * Test registering namespace
+     */
+    public function testRegisterNamespace()
+    {
+        $result = $this->service->registerNamespace(
+            "Application",
+            "src"
+        );
+
+        $this->assertEquals(
+            true,
+            $result
+        );
     }
 
     /**
@@ -36,7 +51,7 @@ class AutoLoaderTest extends TestCase
      * Test throwing exception
      * @depends testRegisterNamespace
      */
-    public function testAutoLoaderException()
+    public function testLoadPSR4Exception()
     {
         $this->expectException(
             AutoLoaderException::class
@@ -48,18 +63,17 @@ class AutoLoaderTest extends TestCase
     }
 
     /**
-     * Test registering namespace
+     * @depends testRegisterNamespace
      */
-    public function testRegisterNamespace()
+    public function testRegisterNamespaceException()
     {
-        $result = $this->service->registerNamespace(
-            "Application",
-            "src"
+        $this->expectException(
+            AutoLoaderException::class
         );
 
-        $this->assertEquals(
-            true,
-            $result
+        $this->service->registerNamespace(
+            "Application",
+            "src"
         );
     }
 }
