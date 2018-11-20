@@ -3,7 +3,7 @@
 namespace Application\Core\Exception;
 
 
-class AutoLoaderException
+class AutoLoaderException extends \Exception
 {
 
 }
