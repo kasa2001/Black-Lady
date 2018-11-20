@@ -11,9 +11,11 @@
          bootstrap="tests/src/bootstrap.php"
 >
     <testsuites>
-
-        <testsuite name="Black Lady Application Test Suite">
-            <directory suffix="test.php">./tests/src/</directory>
+        <testsuite name="AutoLoader">
+            <directory suffix="AutoLoaderTest.php">./tests/src/Core</directory>
+        </testsuite>
+        <testsuite name="Core">
+            <directory suffix="CoreTest.php">./tests/src/Core</directory>
         </testsuite>
     </testsuites>
 
@@ -22,6 +24,11 @@
             <group>slow</group>
         </exclude>
     </groups>
+
+    <listeners>
+        <listener class="Tests\Listeners\AutoLoaderCaseListener" />
+    </listeners>
+
 
     <filter>
         <whitelist>

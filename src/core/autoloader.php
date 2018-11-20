@@ -6,5 +6,5 @@ namespace Application\Core;
 
 class AutoLoader
 {
-    
+
 }
