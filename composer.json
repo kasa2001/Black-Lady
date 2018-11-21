@@ -12,5 +12,8 @@
             "email": "pawelgomolka@interia.pl"
         }
     ],
-    "minimum-stability": "alpha"
+    "minimum-stability": "alpha",
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "tests/src" }
+    }
 }
