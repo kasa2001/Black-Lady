@@ -20,6 +20,7 @@ class AutoLoaderCaseListener implements TestListener
         }
 
         $autoloader = new AutoLoader();
-        
+        $autoloader->registerNamespace('Application','src');
     }
+
 }
