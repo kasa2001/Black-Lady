@@ -8,14 +8,14 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="tests/src/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
 >
     <testsuites>
         <testsuite name="AutoLoader">
-            <directory suffix="AutoLoaderTest.php">./tests/src/Core</directory>
+            <directory suffix="AutoLoaderTest.php">./tests/unit/src/Core</directory>
         </testsuite>
         <testsuite name="Core">
-            <directory suffix="CoreTest.php">./tests/src/Core</directory>
+            <directory suffix="CoreTest.php">./tests/unit/src/Core</directory>
         </testsuite>
     </testsuites>
 
@@ -26,7 +26,7 @@
     </groups>
 
     <listeners>
-        <listener class="Tests\Listeners\AutoLoaderCaseListener" />
+        <listener class="Unit\Listeners\AutoLoaderCaseListener" />
     </listeners>
 
 
