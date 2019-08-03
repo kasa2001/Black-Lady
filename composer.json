@@ -1,5 +1,5 @@
 {
-    "name": "kasa2001/framework",
+    "name": "BlackFramework\Core",
     "description": "Black Framework Core",
     "type": "project",
     "require-dev": {
