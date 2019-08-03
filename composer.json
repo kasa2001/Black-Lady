@@ -1,6 +1,6 @@
 {
     "name": "kasa2001/framework",
-    "description": "Framework MVC",
+    "description": "Black Framework Core",
     "type": "project",
     "require-dev": {
         "phpunit/phpunit": "^7.4"
@@ -14,6 +14,8 @@
     ],
     "minimum-stability": "alpha",
     "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/src" }
+        "psr-4": {
+            "Unit\\": "tests/unit/src"
+        }
     }
 }

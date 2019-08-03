@@ -1,9 +1,11 @@
 <?php
 
-namespace Tests\Core;
+namespace Unit\Core;
 
-use Application\Core\AutoLoader;
-use Application\Core\Exception\AutoLoaderException;
+use BlackFramework\Core\Mock\MockClass;
+use \Throwable;
+use BlackFramework\Core\AutoLoader;
+use BlackFramework\Core\Exception\AutoLoaderException;
 use PHPUnit\Framework\TestCase;
 
 class AutoLoaderTest extends TestCase
@@ -20,13 +22,13 @@ class AutoLoaderTest extends TestCase
 
     /**
      * Test registering namespace
-     * @throws AutoLoaderException
      * @return AutoLoader
+     * @throws AutoLoaderException
      */
     public function testRegisterNamespace(): AutoLoader
     {
         $result = $this->service->registerNamespace(
-            "Application",
+            "BlackFramework\\Core",
             "src"
         );
 
@@ -38,11 +40,34 @@ class AutoLoaderTest extends TestCase
         return $this->service;
     }
 
+
+    /**
+     * Test loading class
+     * @param $service AutoLoader
+     * @throws AutoLoaderException
+     * @throws Throwable
+     * @depends testRegisterNamespace
+     * @return AutoLoader
+     */
+    public function testLoadPSR4(AutoLoader $service): AutoLoader
+    {
+        $this->service->registerNamespace("BlackFramework\\Core", "tests");
+
+        $result = new MockClass();
+
+        $this->assertEquals(
+            MockClass::class,
+            get_class($result)
+        );
+
+        return $service;
+    }
+
     /**
      * @param $service AutoLoader
      * @return AutoLoader
      * @throws AutoLoaderException
-     * @depends testRegisterNamespace
+     * @depends testLoadPSR4
      */
     public function testRegisterNamespaceException(AutoLoader $service)
     {
@@ -51,34 +76,17 @@ class AutoLoaderTest extends TestCase
         );
 
         $service->registerNamespace(
-            "Application",
+            "BlackFramework\\Core",
             "src"
         );
+
         return $service;
     }
 
     /**
-     * Test loading class
-     * @param $service AutoLoader
+     * Test throwing Exception
      * @throws AutoLoaderException
-     * @depends testRegisterNamespace
-     */
-    public function testLoadPSR4(AutoLoader $service): void
-    {
-        $result = $service->loadPSR4(
-            AutoLoader::class
-        );
-
-        $this->assertEquals(
-            true,
-            $result
-        );
-    }
-
-    /**
-     * Test throwing exception
-     * @param $service AutoLoader
-     * @throws AutoLoaderException
+     * @throws Throwable
      */
     public function testLoadPSR4Exception(): void
     {
