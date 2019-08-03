@@ -1,5 +1,5 @@
 {
-    "name": "BlackFramework\Core",
+    "name": "blackframework/core",
     "description": "Black Framework Core",
     "type": "project",
     "require-dev": {
