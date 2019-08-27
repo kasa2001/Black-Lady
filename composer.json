@@ -1,7 +1,7 @@
 {
     "name": "blackframework/core",
     "description": "Black Framework Core",
-    "type": "project",
+    "type": "library",
     "require-dev": {
         "phpunit/phpunit": "^7.4"
     },
@@ -12,10 +12,5 @@
             "email": "pawelgomolka@interia.pl"
         }
     ],
-    "minimum-stability": "alpha",
-    "autoload-dev": {
-        "psr-4": {
-            "Unit\\": "tests/unit/src"
-        }
-    }
+    "minimum-stability": "dev"
 }
