@@ -88,8 +88,10 @@ class AutoLoader
     {
         foreach ($value as $item) {
 
-            $file = preg_replace("/" . $path . "/", $item, $class)  . ".php";
-            echo $file;
+
+
+            $file = preg_replace("/" . $path . "/", $item . DIRECTORY_SEPARATOR, $class)  . ".php";
+
             if (file_exists($file))
             {
                 return $file;
