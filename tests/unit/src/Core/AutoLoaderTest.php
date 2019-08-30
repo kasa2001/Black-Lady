@@ -28,7 +28,7 @@ class AutoLoaderTest extends TestCase
     public function testRegisterNamespace(): AutoLoader
     {
         $result = $this->service->registerNamespace(
-            "BlackFramework\\Core",
+            "BlackFramework\\Core\\",
             [
                 APPLICATION . "/src"
             ]
@@ -54,7 +54,7 @@ class AutoLoaderTest extends TestCase
     public function testLoadPSR4(AutoLoader $service): AutoLoader
     {
         $this->service->registerNamespace(
-            "BlackFramework\\Core",
+            "BlackFramework\\Core\\",
             [
                 APPLICATION . "/src"
             ]
@@ -83,7 +83,7 @@ class AutoLoaderTest extends TestCase
         );
 
         $service->registerNamespace(
-            "BlackFramework\\Core",
+            "BlackFramework\\Core\\",
             [
                 "src"
             ]
@@ -110,7 +110,7 @@ class AutoLoaderTest extends TestCase
 
     public function testLoadFile()
     {
-        $namespace = 'BlackFramework\\\\Core';
+        $namespace = 'BlackFramework\\\\Core\\\\';
         $path = [
             APPLICATION . "/src"
         ];

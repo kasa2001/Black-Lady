@@ -22,7 +22,11 @@ class AutoLoaderCaseListener implements TestListener
 
         $autoloader = new AutoLoader();
         try {
-            $autoloader->registerNamespace('BlackFramework\\Core','src');
+            $autoloader->registerNamespace('BlackFramework\\Core',
+                [
+                    APPLICATION . '/src'
+                ]
+            );
         } catch (AutoLoaderException $e) {
             echo $e->getMessage();
             die;
