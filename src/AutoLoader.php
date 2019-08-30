@@ -28,7 +28,7 @@ class AutoLoader
      * @return bool
      * @throws AutoLoaderException if namespace is registered
      */
-    public function registerNamespace($namespace, $path): bool
+    public function registerNamespace($namespace, array $path): bool
     {
         if (isset($this->namespace[$namespace])) {
             throw new AutoLoaderException("Internal Server Error", 500);
@@ -56,18 +56,43 @@ class AutoLoader
 
             if (!empty($match)) {
 
-                $class = preg_replace("/" . $key . "/", $value, $class)  . ".php";
-
                 $class = str_replace(
                     '\\',
                     DIRECTORY_SEPARATOR,
-                    APPLICATION_PATH . $class
+                    $class
                 );
 
-                include $class;
+                include $this->findFile(
+                    $key,
+                    $value,
+                    $class
+                );
 
                 return true;
 
+            }
+        }
+
+        throw new AutoLoaderException("Internal Server Error", 500);
+    }
+
+
+    /**
+     * @param string $path
+     * @param array $value
+     * @param string $class
+     * @return string
+     * @throws AutoLoaderException
+     */
+    public function findFile(string $path, array $value, string $class)
+    {
+        foreach ($value as $item) {
+
+            $file = preg_replace("/" . $path . "/", $item, $class)  . ".php";
+            echo $file;
+            if (file_exists($file))
+            {
+                return $file;
             }
         }
 

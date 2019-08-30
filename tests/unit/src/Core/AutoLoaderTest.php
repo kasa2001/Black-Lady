@@ -29,7 +29,9 @@ class AutoLoaderTest extends TestCase
     {
         $result = $this->service->registerNamespace(
             "BlackFramework\\Core",
-            "src"
+            [
+                APPLICATION . "/src"
+            ]
         );
 
         $this->assertEquals(
@@ -51,7 +53,12 @@ class AutoLoaderTest extends TestCase
      */
     public function testLoadPSR4(AutoLoader $service): AutoLoader
     {
-        $this->service->registerNamespace("BlackFramework\\Core", "tests");
+        $this->service->registerNamespace(
+            "BlackFramework\\Core",
+            [
+                APPLICATION . "/src"
+            ]
+        );
 
         $result = new MockClass();
 
@@ -77,7 +84,9 @@ class AutoLoaderTest extends TestCase
 
         $service->registerNamespace(
             "BlackFramework\\Core",
-            "src"
+            [
+                "src"
+            ]
         );
 
         return $service;
@@ -96,6 +105,47 @@ class AutoLoaderTest extends TestCase
 
         $this->service->loadPSR4(
             "Class not exists"
+        );
+    }
+
+    public function testLoadFile()
+    {
+        $namespace = 'BlackFramework\\\\Core';
+        $path = [
+            APPLICATION . "/src"
+        ];
+        $class = 'BlackFramework\Core\Mock\MockClass';
+
+        $file = $this->service->findFile(
+            $namespace,
+            $path,
+            $class
+        );
+
+        $this->assertEquals(
+            'C:\\Apache24\\htdocs\\BlackFramework-Core\\tests/../src\\Mock\\MockClass.php',
+            $file
+        );
+    }
+
+    public function testLoadFileException()
+    {
+        $this->expectException(
+            AutoLoaderException::class
+        );
+
+        $namespace = 'BlackFramework\\\\Core';
+
+        $path = [
+            APPLICATION . "/src"
+        ];
+
+        $class = 'BlackFramework\Core\Mock\MockClasses';
+
+        $this->service->findFile(
+            $namespace,
+            $path,
+            $class
         );
     }
 }
