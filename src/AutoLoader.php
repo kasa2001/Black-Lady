@@ -6,7 +6,6 @@ namespace BlackFramework\Core;
 require_once 'Exception/AutoLoaderException.php';
 
 use BlackFramework\Core\Exception\AutoLoaderException;
-use \Throwable;
 
 class AutoLoader
 {
@@ -16,8 +15,14 @@ class AutoLoader
      */
     private $namespace = [];
 
-    public function __construct()
+    /**
+     * @var bool
+     */
+    private $exception;
+
+    public function __construct(bool $exception)
     {
+        $this->exception = $exception;
         spl_autoload_extensions('php');
         spl_autoload_register([$this, "loadPSR4"]);
     }
@@ -40,9 +45,8 @@ class AutoLoader
 
     /**
      * @param $class
-     * @return bool
-     * @throws AutoLoaderException if namespace is not registered
-     * @throws Throwable if class not exists
+     * @return bool|void
+     * @throws AutoLoaderException if class not exists
      */
     public function loadPSR4($class): bool
     {
@@ -62,42 +66,61 @@ class AutoLoader
                     $class
                 );
 
-                include $this->findFile(
+                $file = $this->findFile(
                     $key,
                     $value,
                     $class
                 );
 
-                return true;
+                if (!empty($file)) {
+                    include $file;
+                    return true;
+                }
 
+                break;
             }
         }
 
-        throw new AutoLoaderException("Internal Server Error", 500);
-    }
+        if ($this->exception) {
+            throw new AutoLoaderException("Internal Server Error", 500);
+        }
 
+        return false;
+    }
 
     /**
      * @param string $path
      * @param array $value
      * @param string $class
      * @return string
-     * @throws AutoLoaderException
      */
     public function findFile(string $path, array $value, string $class)
     {
         foreach ($value as $item) {
 
+            $file = preg_replace("/" . $path . "/", $item . DIRECTORY_SEPARATOR, $class) . ".php";
 
-
-            $file = preg_replace("/" . $path . "/", $item . DIRECTORY_SEPARATOR, $class)  . ".php";
-
-            if (file_exists($file))
-            {
+            if (file_exists($file)) {
                 return $file;
             }
         }
 
-        throw new AutoLoaderException("Internal Server Error", 500);
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getException(): bool
+    {
+        return $this->exception;
+    }
+
+    /**
+     * @param mixed $exception
+     */
+    public function setException($exception): void
+    {
+        $this->exception = $exception;
     }
 }
