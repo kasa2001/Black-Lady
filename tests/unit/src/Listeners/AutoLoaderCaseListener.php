@@ -20,7 +20,7 @@ class AutoLoaderCaseListener implements TestListener
             return;
         }
 
-        $autoloader = new AutoLoader();
+        $autoloader = new AutoLoader(false);
         try {
             $autoloader->registerNamespace('BlackFramework\\Core',
                 [

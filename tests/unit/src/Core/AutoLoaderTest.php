@@ -17,7 +17,7 @@ class AutoLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service = new AutoLoader();
+        $this->service = new AutoLoader(false);
     }
 
     /**
@@ -41,7 +41,6 @@ class AutoLoaderTest extends TestCase
 
         return $this->service;
     }
-
 
     /**
      * Test loading class
@@ -99,6 +98,8 @@ class AutoLoaderTest extends TestCase
      */
     public function testLoadPSR4Exception(): void
     {
+        $this->service->setException(true);
+
         $this->expectException(
             AutoLoaderException::class
         );
@@ -110,6 +111,7 @@ class AutoLoaderTest extends TestCase
 
     public function testLoadFile()
     {
+        $this->service->setException(false);
         $namespace = 'BlackFramework\\\\Core\\\\';
         $path = [
             APPLICATION . "/src"
@@ -123,29 +125,18 @@ class AutoLoaderTest extends TestCase
         );
 
         $this->assertEquals(
-            'C:\\Apache24\\htdocs\\BlackFramework-Core\\tests/../src\\Mock\\MockClass.php',
+            dirname(dirname(dirname(__DIR__))) . '/../src\\Mock\\MockClass.php',
             $file
         );
     }
 
-    public function testLoadFileException()
+    public function testSetException()
     {
-        $this->expectException(
-            AutoLoaderException::class
-        );
+        $this->service->setException(false);
 
-        $namespace = 'BlackFramework\\\\Core';
-
-        $path = [
-            APPLICATION . "/src"
-        ];
-
-        $class = 'BlackFramework\Core\Mock\MockClasses';
-
-        $this->service->findFile(
-            $namespace,
-            $path,
-            $class
+        $this->assertEquals(
+            false,
+            $this->service->getException()
         );
     }
 }
