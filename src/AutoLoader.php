@@ -3,7 +3,7 @@
 
 namespace BlackFramework\Core;
 
-require_once 'Exception/AutoLoaderException.php';
+include 'Exception/AutoLoaderException.php';
 
 use BlackFramework\Core\Exception\AutoLoaderException;
 
@@ -20,7 +20,7 @@ class AutoLoader
      */
     private $exception;
 
-    public function __construct(bool $exception)
+    public function __construct(bool $exception = false)
     {
         $this->exception = $exception;
         spl_autoload_extensions('php');
@@ -31,48 +31,25 @@ class AutoLoader
      * @param $namespace
      * @param $path
      * @return bool
-     * @throws AutoLoaderException if namespace is registered
      */
     public function registerNamespace($namespace, array $path): bool
     {
-        if (isset($this->namespace[$namespace])) {
-            throw new AutoLoaderException("Internal Server Error", 500);
-        }
-
-        $this->namespace[$namespace] = $path;
+        $this->namespace[addslashes($namespace)] = $path;
         return true;
     }
 
     /**
      * @param $class
-     * @return bool|void
+     * @return bool
      * @throws AutoLoaderException if class not exists
      */
     public function loadPSR4($class): bool
     {
-        $match = [];
-
         foreach ($this->namespace as $key => $value) {
 
-            $key = addslashes($key);
+            if (preg_match("/" . $key . "/", $class)) {
 
-            preg_match("/" . $key . "/", $class, $match);
-
-            if (!empty($match)) {
-
-                $class = str_replace(
-                    '\\',
-                    DIRECTORY_SEPARATOR,
-                    $class
-                );
-
-                $file = $this->findFile(
-                    $key,
-                    $value,
-                    $class
-                );
-
-                if (!empty($file)) {
+                if ($file = $this->findFile($key, $value, $class)) {
                     include $file;
                     return true;
                 }
@@ -97,7 +74,6 @@ class AutoLoader
     public function findFile(string $path, array $value, string $class)
     {
         foreach ($value as $item) {
-
             $file = preg_replace("/" . $path . "/", $item . DIRECTORY_SEPARATOR, $class) . ".php";
 
             if (file_exists($file)) {
@@ -109,7 +85,7 @@ class AutoLoader
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getException(): bool
     {
@@ -117,7 +93,7 @@ class AutoLoader
     }
 
     /**
-     * @param mixed $exception
+     * @param bool $exception
      */
     public function setException($exception): void
     {

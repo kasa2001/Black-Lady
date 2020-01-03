@@ -70,28 +70,6 @@ class AutoLoaderTest extends TestCase
     }
 
     /**
-     * @param $service AutoLoader
-     * @return AutoLoader
-     * @throws AutoLoaderException
-     * @depends testLoadPSR4
-     */
-    public function testRegisterNamespaceException(AutoLoader $service)
-    {
-        $this->expectException(
-            AutoLoaderException::class
-        );
-
-        $service->registerNamespace(
-            "BlackFramework\\Core\\",
-            [
-                "src"
-            ]
-        );
-
-        return $service;
-    }
-
-    /**
      * Test throwing Exception
      * @throws AutoLoaderException
      * @throws Throwable
