@@ -55,7 +55,7 @@ class AutoLoaderTest extends TestCase
         $this->service->registerNamespace(
             "BlackFramework\\Core\\",
             [
-                APPLICATION . "/src"
+                APPLICATION_SRC
             ]
         );
 
@@ -92,7 +92,7 @@ class AutoLoaderTest extends TestCase
         $this->service->setException(false);
         $namespace = 'BlackFramework\\\\Core\\\\';
         $path = [
-            APPLICATION . "/src"
+            APPLICATION_SRC
         ];
         $class = 'BlackFramework\Core\Mock\MockClass';
 
@@ -103,7 +103,7 @@ class AutoLoaderTest extends TestCase
         );
 
         $this->assertEquals(
-            dirname(dirname(dirname(__DIR__))) . '/../src\\Mock\\MockClass.php',
+            dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR .'..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Mock' . DIRECTORY_SEPARATOR . 'MockClass.php',
             $file
         );
     }
