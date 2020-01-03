@@ -74,7 +74,7 @@ class AutoLoader
     public function findFile(string $path, array $value, string $class)
     {
         foreach ($value as $item) {
-            $file = preg_replace("/" . $path . "/", $item . DIRECTORY_SEPARATOR, $class) . ".php";
+            $file = preg_replace(["/" . $path . "/", "/\\\\/"], [$item . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $class) . ".php";
 
             if (file_exists($file)) {
                 return $file;
