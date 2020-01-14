@@ -32,9 +32,9 @@ class AutoLoader
      * @param $path
      * @return bool
      */
-    public function registerNamespace($namespace, array $path): bool
+    public function registerNamespace(string $namespace, array $path): bool
     {
-        $this->namespace[addslashes($namespace)] = $path;
+        $this->namespace[$namespace] = $path;
         return true;
     }
 
@@ -47,13 +47,8 @@ class AutoLoader
     {
         foreach ($this->namespace as $key => $value) {
 
-            if (preg_match("/" . $key . "/", $class)) {
-
-                if ($file = $this->findFile($key, $value, $class)) {
-                    include $file;
-                    return true;
-                }
-
+            if (strpos($class, $key) !== false) {
+                $this->findFile($value, substr($class, strlen($key)));
                 break;
             }
         }
@@ -64,24 +59,23 @@ class AutoLoader
 
         return false;
     }
-
     /**
-     * @param string $path
      * @param array $value
      * @param string $class
      * @return string
      */
-    public function findFile(string $path, array $value, string $class)
+    public function findFile(array $value, string $class)
     {
+        $class = str_replace("\\", DIRECTORY_SEPARATOR, $class);
         foreach ($value as $item) {
-            $file = preg_replace(["/" . $path . "/", "/\\\\/"], [$item . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $class) . ".php";
-
+            $file = $item . $class;
             if (file_exists($file)) {
-                return $file;
+                include $file;
+                return 0;
             }
         }
 
-        return null;
+        return 1;
     }
 
     /**

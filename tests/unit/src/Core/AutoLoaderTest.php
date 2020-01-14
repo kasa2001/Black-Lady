@@ -23,7 +23,6 @@ class AutoLoaderTest extends TestCase
     /**
      * Test registering namespace
      * @return AutoLoader
-     * @throws AutoLoaderException
      */
     public function testRegisterNamespace(): AutoLoader
     {
@@ -45,7 +44,6 @@ class AutoLoaderTest extends TestCase
     /**
      * Test loading class
      * @param $service AutoLoader
-     * @throws AutoLoaderException
      * @throws Throwable
      * @depends testRegisterNamespace
      * @return AutoLoader
@@ -87,26 +85,6 @@ class AutoLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFile()
-    {
-        $this->service->setException(false);
-        $namespace = 'BlackFramework\\\\Core\\\\';
-        $path = [
-            APPLICATION_SRC
-        ];
-        $class = 'BlackFramework\Core\Mock\MockClass';
-
-        $file = $this->service->findFile(
-            $namespace,
-            $path,
-            $class
-        );
-
-        $this->assertEquals(
-            dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR .'..' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Mock' . DIRECTORY_SEPARATOR . 'MockClass.php',
-            $file
-        );
-    }
 
     public function testSetException()
     {
