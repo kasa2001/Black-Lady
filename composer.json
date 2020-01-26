@@ -12,5 +12,5 @@
             "email": "pawelgomolka@interia.pl"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
