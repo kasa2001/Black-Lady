@@ -3,8 +3,6 @@
 
 namespace BlackFramework\Core;
 
-include 'Exception/AutoLoaderException.php';
-
 use BlackFramework\Core\Exception\AutoLoaderException;
 
 class AutoLoader
@@ -15,15 +13,16 @@ class AutoLoader
      */
     private $namespace = [];
 
+    private $count = 0;
+
     /**
      * @var bool
      */
     private $exception;
 
-    public function __construct(bool $exception = false)
+    public function __construct($exception = false)
     {
         $this->exception = $exception;
-        spl_autoload_extensions('php');
         spl_autoload_register([$this, "loadPSR4"]);
     }
 
@@ -32,9 +31,14 @@ class AutoLoader
      * @param $path
      * @return bool
      */
-    public function registerNamespace($namespace, array $path): bool
+    public function registerNamespace($namespace, $path)
     {
-        $this->namespace[addslashes($namespace)] = $path;
+        $this->namespace[$this->count] = [
+            'namespace' => strtr($namespace, "\\", DIRECTORY_SEPARATOR),
+            'path' => $path,
+            'length' => strlen($namespace) - 1,
+        ];
+        $this->count++;
         return true;
     }
 
@@ -45,20 +49,24 @@ class AutoLoader
      */
     public function loadPSR4($class): bool
     {
-        foreach ($this->namespace as $key => $value) {
+        $class = strtr($class, "\\", DIRECTORY_SEPARATOR);
+        for($i = 0; $i < $this->count; $i++) {
 
-            if (preg_match("/" . $key . "/", $class)) {
+            if (strrpos($class, $this->namespace[$i]['namespace']) === 0) {
+                $class = substr($class, $this->namespace[$i]['length']) . ".php";
 
-                if ($file = $this->findFile($key, $value, $class)) {
-                    include $file;
-                    return true;
+                foreach ($this->namespace[$i]['path'] as $path) {
+                    $file = $path . $class;
+                    if (is_file($file)) {
+                        include $file;
+                        return true;
+                    }
                 }
-
-                break;
             }
         }
 
         if ($this->exception) {
+            include 'Exception/AutoLoaderException.php';
             throw new AutoLoaderException("Internal Server Error", 500);
         }
 
@@ -66,28 +74,9 @@ class AutoLoader
     }
 
     /**
-     * @param string $path
-     * @param array $value
-     * @param string $class
-     * @return string
-     */
-    public function findFile(string $path, array $value, string $class)
-    {
-        foreach ($value as $item) {
-            $file = preg_replace(["/" . $path . "/", "/\\\\/"], [$item . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $class) . ".php";
-
-            if (file_exists($file)) {
-                return $file;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @return bool
      */
-    public function getException(): bool
+    public function getException()
     {
         return $this->exception;
     }
@@ -95,7 +84,7 @@ class AutoLoader
     /**
      * @param bool $exception
      */
-    public function setException($exception): void
+    public function setException($exception)
     {
         $this->exception = $exception;
     }
